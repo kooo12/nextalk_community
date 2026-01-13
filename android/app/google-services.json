@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "937467737904",
+    "project_id": "nextalk77",
+    "storage_bucket": "nextalk77.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937467737904:android:2718c949bbcf147c4a3af5",
+        "android_client_info": {
+          "package_name": "com.ako.nextalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937467737904-jl51aiajhe9ftdff66sbkkeu8ndnhdic.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ako.nextalk",
+            "certificate_hash": "60dd501583b7bdd50464a3daaf1682f2b2428aad"
+          }
+        },
+        {
+          "client_id": "937467737904-1of6hoqcbhlo0e00voa724qripjt8i8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBibbWowXfs9tJ7kpusdMwnRCY6WCAMOls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937467737904-1of6hoqcbhlo0e00voa724qripjt8i8l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "937467737904-8g5sa76m9u8rgf4g1a82cuk9h0snq9up.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ako.nextalk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
