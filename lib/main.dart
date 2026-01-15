@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextalk_community/core/constants/app_constants.dart';
 import 'package:nextalk_community/core/providers/theme_provider.dart';
+import 'package:nextalk_community/core/routing/app_router.dart';
 import 'package:nextalk_community/core/utils/theme_utils.dart';
-import 'package:nextalk_community/features/home/home.dart';
 
 Future<void> _initializeCrashlytics() async {
   try {
@@ -97,13 +97,14 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
-    return MaterialApp(
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      home: const HomeScreen(),
+      routerConfig: router,
     );
   }
 }

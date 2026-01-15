@@ -1,18 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:nextalk_community/core/error/exceptions.dart';
-import 'package:nextalk_community/core/error/failures.dart';
-import 'package:nextalk_community/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:nextalk_community/features/auth/domain/entities/user_entity.dart';
-import 'package:nextalk_community/features/auth/domain/repositories/auth_repository.dart';
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/error/failures.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
-  AuthRepositoryImpl({required this.remoteDataSource});
+
+  AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<UserEntity> signInWithEmailAndPassword(String email, String password) {
+  Future<UserEntity> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      return remoteDataSource.signInWithEmailAndPassword(email, password);
+      return await remoteDataSource.signInWithEmailAndPassword(email, password);
     } on AuthException catch (e) {
       throw AuthFailure(e.message);
     } catch (e) {
@@ -22,12 +24,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserEntity> signUpWithEmailAndPassword(
-      String email, String password, String username) {
+      String email, String password, String username) async {
     try {
-      return remoteDataSource.signUpWithEmailAndPassword(
+      return await remoteDataSource.signUpWithEmailAndPassword(
           email, password, username);
     } on AuthException catch (e) {
       throw AuthFailure(e.message);
+    } on ValidationException catch (e) {
+      throw ValidationFailure(e.message);
     } catch (e) {
       throw AuthFailure('Unexpected error: ${e.toString()}');
     }

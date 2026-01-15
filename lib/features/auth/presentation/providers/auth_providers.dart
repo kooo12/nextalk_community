@@ -21,8 +21,7 @@ final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((Ref ref) {
 });
 
 final authRepositoryProvider = Provider<AuthRepositoryImpl>((Ref ref) {
-  return AuthRepositoryImpl(
-      remoteDataSource: ref.watch(authRemoteDataSourceProvider));
+  return AuthRepositoryImpl(ref.watch(authRemoteDataSourceProvider));
 });
 
 final signInWithEmailProvider = Provider((Ref ref) {

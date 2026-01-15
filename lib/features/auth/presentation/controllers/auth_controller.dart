@@ -1,51 +1,46 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nextalk_community/core/error/failures.dart';
-import 'package:nextalk_community/features/auth/domain/entities/user_entity.dart';
-import 'package:nextalk_community/features/auth/domain/repositories/auth_repository.dart';
-import 'package:nextalk_community/features/auth/domain/usecases/sign_in_with_email.dart';
-import 'package:nextalk_community/features/auth/domain/usecases/sign_in_with_google.dart';
-import 'package:nextalk_community/features/auth/domain/usecases/sign_up_with_email.dart';
-import 'package:nextalk_community/features/auth/domain/usecases/sign_out.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/sign_in_with_email.dart';
+import '../../domain/usecases/sign_up_with_email.dart';
+import '../../domain/usecases/sign_in_with_google.dart';
+import '../../domain/usecases/sign_out.dart';
+import '../../../../core/error/failures.dart';
 
 class AuthState {
   final AsyncValue<UserEntity?> user;
   final bool isLoading;
-  final String? errorMessage;
 
   const AuthState({
     required this.user,
     this.isLoading = false,
-    this.errorMessage,
   });
 
   AuthState copyWith({
     AsyncValue<UserEntity?>? user,
     bool? isLoading,
-    String? errorMessage,
   }) {
     return AuthState(
       user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
 
 class AuthController extends StateNotifier<AuthState> {
   final SignInWithEmail signInWithEmail;
-  final SignInWithGoogle signInWithGoogle;
   final SignUpWithEmail signUpWithEmail;
+  final SignInWithGoogle signInWithGoogle;
   final SignOut signOut;
   final AuthRepository authRepository;
   StreamSubscription<User?>? _authStateSubscription;
 
   AuthController({
     required this.signInWithEmail,
-    required this.signInWithGoogle,
     required this.signUpWithEmail,
+    required this.signInWithGoogle,
     required this.signOut,
     required this.authRepository,
   }) : super(const AuthState(user: AsyncValue.loading())) {
@@ -66,14 +61,15 @@ class AuthController extends StateNotifier<AuthState> {
             state = state.copyWith(user: AsyncValue.data(user));
           } catch (e, stack) {
             state = state.copyWith(
-                user: AsyncValue.error(e, stack), errorMessage: e.toString());
+              user: AsyncValue.error(e, stack),
+            );
           }
         }
       },
       onError: (error, stack) {
         state = state.copyWith(
-            user: AsyncValue.error(error, stack),
-            errorMessage: error.toString());
+          user: AsyncValue.error(error, stack),
+        );
       },
     );
   }
@@ -86,22 +82,27 @@ class AuthController extends StateNotifier<AuthState> {
 
   Future<void> signInEmail(String email, String password) async {
     state = state.copyWith(
-        isLoading: true, user: const AsyncValue.loading(), errorMessage: null);
+      user: const AsyncValue.loading(),
+      isLoading: true,
+    );
+
     try {
       final user = await signInWithEmail(email, password);
-      state = state.copyWith(user: AsyncValue.data(user), isLoading: false);
+      state = state.copyWith(
+        user: AsyncValue.data(user),
+        isLoading: false,
+      );
     } on AuthFailure catch (e) {
       state = state.copyWith(
         user: AsyncValue.error(e, StackTrace.current),
         isLoading: false,
-        errorMessage: e.message,
       );
       rethrow;
     } catch (e, stack) {
       state = state.copyWith(
-          isLoading: false,
-          user: AsyncValue.error(e, stack),
-          errorMessage: e.toString());
+        user: AsyncValue.error(e, stack),
+        isLoading: false,
+      );
       rethrow;
     }
   }
@@ -111,7 +112,6 @@ class AuthController extends StateNotifier<AuthState> {
     state = state.copyWith(
       user: const AsyncValue.loading(),
       isLoading: true,
-      errorMessage: null,
     );
 
     try {
@@ -119,27 +119,23 @@ class AuthController extends StateNotifier<AuthState> {
       state = state.copyWith(
         user: AsyncValue.data(user),
         isLoading: false,
-        errorMessage: null,
       );
     } on ValidationFailure catch (e) {
       state = state.copyWith(
         user: AsyncValue.error(e, StackTrace.current),
         isLoading: false,
-        errorMessage: e.message,
       );
       rethrow;
     } on AuthFailure catch (e) {
       state = state.copyWith(
         user: AsyncValue.error(e, StackTrace.current),
         isLoading: false,
-        errorMessage: e.message,
       );
       rethrow;
     } catch (e, stack) {
       state = state.copyWith(
         user: AsyncValue.error(e, stack),
         isLoading: false,
-        errorMessage: e.toString(),
       );
       rethrow;
     }
@@ -149,7 +145,6 @@ class AuthController extends StateNotifier<AuthState> {
     state = state.copyWith(
       user: const AsyncValue.loading(),
       isLoading: true,
-      errorMessage: null,
     );
 
     try {
@@ -157,20 +152,17 @@ class AuthController extends StateNotifier<AuthState> {
       state = state.copyWith(
         user: AsyncValue.data(user),
         isLoading: false,
-        errorMessage: null,
       );
     } on AuthFailure catch (e) {
       state = state.copyWith(
         user: AsyncValue.error(e, StackTrace.current),
         isLoading: false,
-        errorMessage: e.message,
       );
       rethrow;
     } catch (e, stack) {
       state = state.copyWith(
         user: AsyncValue.error(e, stack),
         isLoading: false,
-        errorMessage: e.toString(),
       );
       rethrow;
     }
@@ -188,7 +180,6 @@ class AuthController extends StateNotifier<AuthState> {
       state = state.copyWith(
         user: AsyncValue.error(e, stack),
         isLoading: false,
-        errorMessage: e.toString(),
       );
       rethrow;
     }
